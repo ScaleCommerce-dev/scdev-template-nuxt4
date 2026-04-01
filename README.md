@@ -29,6 +29,8 @@ After setup completes, your app is running at `https://my-app.scalecommerce.site
 4. Installs dependencies (`pnpm install`)
 5. Marks setup as complete - the Nuxt dev server starts automatically
 
+All commands can be seen in `.scdev/commands/setup.just`.
+
 ## Development
 
 The Nuxt dev server runs with HMR - edit your components and see changes instantly in the browser.
