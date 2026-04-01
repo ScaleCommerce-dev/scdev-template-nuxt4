@@ -1,0 +1,5 @@
+node_modules/
+.pnpm-store/
+.nuxt/
+.output/
+.setup-complete

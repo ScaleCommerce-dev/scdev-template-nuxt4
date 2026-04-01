@@ -1,0 +1,43 @@
+version: 1
+name: ${PROJECTDIR}
+domain: ${PROJECTNAME}.${SCDEV_DOMAIN}
+
+info: |
+  ## ${PROJECTNAME}
+
+  Nuxt 4 application.
+
+  Run `scdev setup` to scaffold and install the project.
+
+shared:
+  router: true
+
+services:
+  app:
+    image: node:22-alpine
+    command: >-
+      sh -c "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 &&
+      corepack enable &&
+      if [ ! -f .setup-complete ]; then
+        echo 'Waiting for setup... Run: scdev setup';
+        while [ ! -f .setup-complete ]; do sleep 2; done;
+      fi;
+      pnpm install && exec pnpm dev"
+    working_dir: /app
+    volumes:
+      - ${PROJECTPATH}:/app
+    environment:
+      NODE_ENV: development
+      HOST: "0.0.0.0"
+      PORT: "3000"
+    routing:
+      port: 3000
+
+mutagen:
+  ignore:
+    - node_modules
+    - .pnpm-store
+    - .nuxt
+    - .output
+    - .scdev
+    - .setup-complete
