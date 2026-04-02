@@ -2,7 +2,7 @@
 
 [no-exit-message]
 default:
-    scdev start
+    scdev start -q
     @echo ""
     @echo "Installing tools..."
     scdev exec app sh -c "corepack enable && apk add --no-cache git"
