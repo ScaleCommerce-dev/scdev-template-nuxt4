@@ -3,24 +3,15 @@
 [no-exit-message]
 default:
     scdev start -q
-    @echo ""
-    @echo "Installing tools..."
+    @scdev step "Installing tools"
     scdev exec app sh -c "corepack enable && apk add --no-cache git"
-    @echo ""
-    @echo "Scaffolding Nuxt project..."
+    @scdev step "Scaffolding Nuxt project"
     scdev exec app pnpm dlx nuxi@latest init . --packageManager pnpm --gitInit=false --force
-    @echo ""
-    @echo "Preparing Nuxt modules..."
+    @scdev step "Preparing Nuxt modules"
     scdev exec app npx nuxi prepare
-    @echo ""
-    @echo "Approving native module builds..."
+    @scdev step "Approving native module builds"
     scdev exec app pnpm approve-builds --all
-    @echo ""
-    @echo "Finalizing..."
+    @scdev step "Finalizing"
     scdev exec app sh -c "echo '.setup-complete' >> .gitignore && touch .setup-complete"
-    @echo ""
-    @echo "Setup complete! App will start automatically."
-    @echo ""
-    @echo "Here are the details about your new project:"
-    @echo ""
+    @scdev step "Setup complete! App will start automatically."
     scdev info
