@@ -1,13 +1,13 @@
 version: 1
 name: ${PROJECTDIR}
-domain: ${PROJECTNAME}.${SCDEV_DOMAIN}
+domain: ${PROJECTNAME}.${ZDEV_DOMAIN}
 
 info: |
   ## ${PROJECTNAME}
 
   Nuxt 4 application.
 
-  Run `scdev setup` to scaffold and install the project.
+  Run `zdev setup` to scaffold and install the project.
 
 shared:
   router: true
@@ -18,7 +18,7 @@ services:
     command: >-
       sh -c "corepack enable &&
       if [ ! -f .setup-complete ]; then
-        echo 'Waiting for setup... Run: scdev setup';
+        echo 'Waiting for setup... Run: zdev setup';
         while [ ! -f .setup-complete ]; do sleep 2; done;
       fi;
       pnpm install && exec pnpm dev"
@@ -39,5 +39,5 @@ mutagen:
     - .pnpm-store
     - .nuxt
     - .output
-    - .scdev
+    - .zdev
     - .setup-complete
