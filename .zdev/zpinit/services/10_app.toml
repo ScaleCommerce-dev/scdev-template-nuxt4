@@ -1,0 +1,15 @@
+# The Nuxt dev server, supervised by zpinit (mode 3 — the image has no CMD).
+#
+# Runs after entrypoint.d/ (dependency install) has completed. If it crashes,
+# zpinit restarts it with backoff; after 5 consecutive crashes it lands in FATAL
+# and stops retrying — but zpinit stays PID 1 either way, so the CONTAINER STAYS
+# UP and `zdev exec` / `zdev module add` keep working. That's the whole point of
+# supervising instead of running the server as the container CMD: a bad
+# nuxt.config.ts (e.g. a module referenced but not installed) no longer bricks
+# the container. Recover in place, then `zpctl restart app` (or `zdev restart`).
+#
+# No [ready] probe: a dev server doesn't gate anything downstream, and its first
+# compile can be slow — we don't want boot_timeout to fire on it.
+command = ["pnpm", "dev"]
+cwd = "/app"
+restart = "always"

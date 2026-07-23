@@ -1,0 +1,16 @@
+# zpinit globals.
+#
+# entrypoint_on_failure = "continue": if the boot install (entrypoint.d/
+# 10-install.sh) exits non-zero, log it and carry on to supervise mode instead
+# of aborting PID 1 (the default "fail", which exits the container).
+#
+# Why: `pnpm install` runs the project's `postinstall` = `nuxt prepare`, which
+# loads nuxt.config.ts. So a bad config (e.g. a module referenced but not
+# installed — the classic half-finished `zdev module add`) makes the *install*
+# fail on a cold boot, not just the dev server. With the default "fail" that
+# would exit the container and you could not `zdev exec` in to fix it. "continue"
+# means the container always comes up: the failure is visible in the logs and via
+# `zpctl status` (the app service won't be running / will be FATAL), the URL
+# 502s, and you can `zdev exec` / `zdev module add` to repair it in place, then
+# `zpctl restart app` (or `zdev restart`).
+entrypoint_on_failure = "continue"

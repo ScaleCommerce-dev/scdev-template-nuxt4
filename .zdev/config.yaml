@@ -7,27 +7,28 @@ info: |
 
   Nuxt 4 application.
 
-  Run `zdev setup` to scaffold and install the project.
+  `zdev start` installs deps and runs it.
+
+  Manage Nuxt modules with `zdev module add|remove|search` (e.g. `zdev module add @nuxt/image`).
 
 shared:
   router: true
 
 services:
   app:
-    image: node:22-alpine
-    command: >-
-      sh -c "corepack enable &&
-      if [ ! -f .setup-complete ]; then
-        echo 'Waiting for setup... Run: zdev setup';
-        while [ ! -f .setup-complete ]; do sleep 2; done;
-      fi;
-      pnpm install && exec pnpm dev"
+    # Node 24 + zpinit as PID 1 (mode 2). On boot zpinit runs
+    # .zdev/zpinit/entrypoint.d/ (pnpm install) then exec's the CMD (pnpm dev).
+    # The project itself is scaffolded once at `zdev create` time by
+    # .zdev/scaffold.sh — no gate, no marker. See .zdev/Dockerfile.
+    dockerfile: .zdev/Dockerfile
     working_dir: /app
     volumes:
       - ${PROJECTPATH}:/app
     environment:
       NODE_ENV: development
-      COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+      # COREPACK_ENABLE_DOWNLOAD_PROMPT is baked into the image (.zdev/Dockerfile)
+      # so it also covers the create-time scaffold container, which gets no env
+      # from here.
       HOST: "0.0.0.0"
       PORT: "3000"
     routing:
@@ -40,4 +41,3 @@ mutagen:
     - .nuxt
     - .output
     - .zdev
-    - .setup-complete

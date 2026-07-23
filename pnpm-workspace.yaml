@@ -1,0 +1,13 @@
+# pnpm v10+ reads project settings from this file (not .npmrc).
+#
+# dangerouslyAllowAllBuilds auto-approves native build scripts (esbuild, sharp,
+# better-sqlite3, ...). pnpm blocks them by default and, in a non-TTY, aborts
+# with ERR_PNPM_IGNORED_BUILDS instead of prompting. Setting it here fixes it
+# for EVERY pnpm invocation in the project — the boot install, `zdev module`
+# (nuxi module add runs pnpm add internally), and manual `pnpm add`. Without it,
+# any of those aborts the moment a dependency ships a build script.
+#
+# "dangerous" = build scripts run arbitrary code; fine for a dev container, and
+# no worse than the interactive `pnpm approve-builds --all`. Prefer the narrower
+# `onlyBuiltDependencies: [pkg, ...]` allow-list if you want to be strict.
+dangerouslyAllowAllBuilds: true
