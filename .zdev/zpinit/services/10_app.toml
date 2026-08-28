@@ -13,3 +13,18 @@
 command = ["pnpm", "dev"]
 cwd = "/app"
 restart = "always"
+
+# on_boot_failure = "continue": the third piece of the recoverability
+# chain, alongside supervise mode and entrypoint_on_failure = "continue"
+# in zpinit.toml. Without it, a dev server that cannot even START on a
+# COLD boot (no node_modules because the install failed, a syntax error
+# in nuxt.config.ts) fails zpinit's initial boot after boot_timeout, and
+# the default "fail" exits the container anyway. That undoes the other
+# two pieces: the container is a brick again, exactly in the situation
+# they exist to survive. With "continue" PID 1 stays up, the failure
+# shows in `zpctl status` (BACKOFF / FATAL) and the logs, and you repair
+# via `zdev exec` then `zpctl restart app`.
+#
+# A WARM boot hides this: the service reaches RUNNING, boot completes,
+# and a later crash never touches the container. Test cold.
+on_boot_failure = "continue"
